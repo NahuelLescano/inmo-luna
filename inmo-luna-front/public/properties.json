@@ -1,0 +1,104 @@
+[
+    {
+        "id": 1,
+        "titulo": "Casa Moderna en el Centro",
+        "tipo": "venta",
+        "precio": 250000,
+        "moneda": "USD",
+        "habitaciones": 3,
+        "banos": 2,
+        "m2": 180,
+        "ubicacion": "Centro",
+        "descripcion": "Hermosa casa moderna ubicada en el corazón de la ciudad. Cuenta con amplios espacios, acabados de alta calidad y una ubicación privilegiada cerca de todos los servicios. La propiedad incluye jardín, garaje para dos vehículos y terraza.",
+        "fotos": [
+            "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800",
+            "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800",
+            "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800"
+        ]
+    },
+    {
+        "id": 2,
+        "titulo": "Apartamento con Vista al Mar",
+        "tipo": "alquiler",
+        "precio": 1200,
+        "moneda": "USD",
+        "habitaciones": 2,
+        "banos": 1,
+        "m2": 85,
+        "ubicacion": "Zona Costera",
+        "descripcion": "Espectacular apartamento con vista panorámica al mar. Totalmente amueblado y equipado. El edificio cuenta con piscina, gimnasio, seguridad 24 horas y acceso directo a la playa. Ideal para parejas o profesionales.",
+        "fotos": [
+            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800",
+            "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",
+            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800"
+        ]
+    },
+    {
+        "id": 3,
+        "titulo": "Casa Familiar con Jardín",
+        "tipo": "venta",
+        "precio": 380000,
+        "moneda": "USD",
+        "habitaciones": 4,
+        "banos": 3,
+        "m2": 250,
+        "ubicacion": "Residencial Las Palmas",
+        "descripcion": "Amplia casa familiar en una de las zonas más exclusivas de la ciudad. Cuenta con 4 habitaciones, 3 baños completos, sala de estar, comedor, cocina equipada, jardín con área de juegos y terraza. Perfecta para familias grandes.",
+        "fotos": [
+            "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800",
+            "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=800",
+            "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800"
+        ]
+    },
+    {
+        "id": 4,
+        "titulo": "Loft Industrial en Zona Trendy",
+        "tipo": "alquiler",
+        "precio": 950,
+        "moneda": "USD",
+        "habitaciones": 1,
+        "banos": 1,
+        "m2": 65,
+        "ubicacion": "Distrito Creativo",
+        "descripcion": "Moderno loft con diseño industrial en el corazón del distrito creativo. Techos altos, ventanales, acabados en concreto y madera. Cerca de cafés, galerías y espacios de coworking. Ideal para jóvenes profesionales.",
+        "fotos": [
+            "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=800",
+            "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?w=800",
+            "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800"
+        ]
+    },
+    {
+        "id": 5,
+        "titulo": "Casa de Campo con Piscina",
+        "tipo": "venta",
+        "precio": 450000,
+        "moneda": "USD",
+        "habitaciones": 5,
+        "banos": 4,
+        "m2": 320,
+        "ubicacion": "Valle Verde",
+        "descripcion": "Espectacular casa de campo con piscina privada y amplias áreas verdes. 5 habitaciones, 4 baños, sala de juegos, cine en casa y cocina gourmet. Perfecta para disfrutar de la naturaleza sin comodidades.",
+        "fotos": [
+            "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800",
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+            "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800"
+        ]
+    },
+    {
+        "id": 6,
+        "titulo": "Apartamento Céntrico Amueblado",
+        "tipo": "alquiler",
+        "precio": 800,
+        "moneda": "USD",
+        "habitaciones": 2,
+        "banos": 1,
+        "m2": 70,
+        "ubicacion": "Centro",
+        "descripcion": "Acogedor apartamento totalmente amueblado en el centro de la ciudad. A pasos de restaurantes, tiendas y transporte público. Ideal para parejas o estudiantes universitarios.",
+        "fotos": [
+            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800",
+            "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800",
+            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800"
+        ]
+    }
+]

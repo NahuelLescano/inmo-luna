@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Luna creciente -->
+  <path d="M 200 60 A 120 120 0 1 0 200 340 A 90 90 0 1 1 200 60 Z" fill="#1a3a5c"/>
+  
+  <!-- Casa -->
+  <g fill="#b8956a">
+    <!-- Techo -->
+    <polygon points="200,140 160,180 240,180"/>
+    <!-- Pared -->
+    <rect x="170" y="180" width="60" height="40"/>
+    <!-- Ventana -->
+    <rect x="185" y="190" width="12" height="12" fill="#1a3a5c"/>
+    <rect x="203" y="190" width="12" height="12" fill="#1a3a5c"/>
+  </g>
+  
+  <!-- Texto LUNA -->
+  <text x="200" y="290" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="56" font-weight="600" fill="#1a3a5c" letter-spacing="8">LUNA</text>
+  
+  <!-- Líneas decorativas -->
+  <line x1="60" y1="320" x2="130" y2="320" stroke="#b8956a" stroke-width="2"/>
+  <line x1="270" y1="320" x2="340" y2="320" stroke="#b8956a" stroke-width="2"/>
+  
+  <!-- Texto INMOBILIARIA -->
+  <text x="200" y="330" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="18" font-weight="500" fill="#b8956a" letter-spacing="4">INMOBILIARIA</text>
+</svg>
