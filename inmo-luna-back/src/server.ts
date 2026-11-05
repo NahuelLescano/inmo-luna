@@ -1,24 +1,26 @@
-import express from 'express';
-import cors from 'cors';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import { readFileSync, writeFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
-
-dotenv.config();
+import express from "express";
+import cors from "cors";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { readFileSync, writeFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_FILE = join(__dirname, '../data/properties.json');
 
-const ADMIN_USER = process.env.ADMIN_USER || 'admin';
-const ADMIN_PASS = process.env.ADMIN_PASS || 'luna2026';
-const JWT_SECRET = process.env.JWT_SECRET || 'secret_key';
+// Cargar el .env único en la raíz del monorepo
+dotenv.config({ path: join(__dirname, "../../.env") });
+
+const DATA_FILE = join(__dirname, "../data/properties.json");
+
+const ADMIN_USER = process.env.ADMIN_USER || "admin";
+const ADMIN_PASS = process.env.ADMIN_PASS || "luna2026";
+const JWT_SECRET = process.env.JWT_SECRET || "secret_key";
 
 interface Property {
     id: number;
     titulo: string;
-    tipo: 'venta' | 'alquiler';
+    tipo: "venta" | "alquiler";
     precio: number;
     moneda: string;
     habitaciones: number;
@@ -30,27 +32,27 @@ interface Property {
 }
 
 function readProperties(): Property[] {
-    const data = readFileSync(DATA_FILE, 'utf-8');
+    const data = readFileSync(DATA_FILE, "utf-8");
     return JSON.parse(data);
 }
 
 function writeProperties(properties: Property[]): void {
-    writeFileSync(DATA_FILE, JSON.stringify(properties, null, 4), 'utf-8');
+    writeFileSync(DATA_FILE, JSON.stringify(properties, null, 4), "utf-8");
 }
 
 // Middleware de autenticación
 const verifyToken = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-        res.status(401).json({ error: 'Token requerido' });
+        res.status(401).json({ error: "Token requerido" });
         return;
     }
 
     jwt.verify(token, JWT_SECRET, (err) => {
         if (err) {
-            res.status(403).json({ error: 'Token inválido o expirado' });
+            res.status(403).json({ error: "Token inválido o expirado" });
             return;
         }
         next();
@@ -62,31 +64,31 @@ app.use(cors());
 app.use(express.json());
 
 // Login Admin
-app.post('/api/login', (req, res) => {
+app.post("/api/login", (req, res) => {
     const { username, password } = req.body;
 
     if (username === ADMIN_USER && password === ADMIN_PASS) {
-        const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '8h' });
+        const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: "8h" });
         res.json({ token });
         return;
     }
 
-    res.status(401).json({ error: 'Credenciales inválidas' });
+    res.status(401).json({ error: "Credenciales inválidas" });
 });
 
 // GET - Listar todas las propiedades
-app.get('/api/properties', (_req, res) => {
+app.get("/api/properties", (_req, res) => {
     const properties = readProperties();
     res.json(properties);
 });
 
 // GET - Obtener una propiedad por ID
-app.get('/api/properties/:id', (req, res) => {
+app.get("/api/properties/:id", (req, res) => {
     const properties = readProperties();
     const property = properties.find(p => p.id === parseInt(String(req.params.id)));
 
     if (!property) {
-        res.status(404).json({ error: 'Propiedad no encontrada' });
+        res.status(404).json({ error: "Propiedad no encontrada" });
         return;
     }
 
@@ -94,7 +96,7 @@ app.get('/api/properties/:id', (req, res) => {
 });
 
 // POST - Crear nueva propiedad (Protegido)
-app.post('/api/properties', verifyToken, (req, res) => {
+app.post("/api/properties", verifyToken, (req, res) => {
     const properties = readProperties();
 
     const newProperty: Property = {
@@ -118,12 +120,12 @@ app.post('/api/properties', verifyToken, (req, res) => {
 });
 
 // PUT - Editar propiedad existente (Protegido)
-app.put('/api/properties/:id', verifyToken, (req, res) => {
+app.put("/api/properties/:id", verifyToken, (req, res) => {
     const properties = readProperties();
     const index = properties.findIndex(p => p.id === parseInt(String(req.params.id)));
 
     if (index === -1) {
-        res.status(404).json({ error: 'Propiedad no encontrada' });
+        res.status(404).json({ error: "Propiedad no encontrada" });
         return;
     }
 
@@ -146,12 +148,12 @@ app.put('/api/properties/:id', verifyToken, (req, res) => {
 });
 
 // DELETE - Eliminar propiedad (Protegido)
-app.delete('/api/properties/:id', verifyToken, (req, res) => {
+app.delete("/api/properties/:id", verifyToken, (req, res) => {
     const properties = readProperties();
     const index = properties.findIndex(p => p.id === parseInt(String(req.params.id)));
 
     if (index === -1) {
-        res.status(404).json({ error: 'Propiedad no encontrada' });
+        res.status(404).json({ error: "Propiedad no encontrada" });
         return;
     }
 

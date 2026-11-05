@@ -1,17 +1,17 @@
-import { useState, type SubmitEvent } from 'react';
+import { useState, type SubmitEvent } from "react";
 
 export function Contact() {
   const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    telefono: '',
-    mensaje: ''
+    nombre: "",
+    email: "",
+    telefono: "",
+    mensaje: ""
   });
 
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert('¡Gracias por tu mensaje! Te contactaremos pronto.');
-    setFormData({ nombre: '', email: '', telefono: '', mensaje: '' });
+    alert("¡Gracias por tu mensaje! Te contactaremos pronto.");
+    setFormData({ nombre: "", email: "", telefono: "", mensaje: "" });
   };
 
   return (

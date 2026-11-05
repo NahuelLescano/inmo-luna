@@ -1,6 +1,6 @@
 # Creacion de usuario para crear, modificar o eliminar un lote.
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: FEATURE
 

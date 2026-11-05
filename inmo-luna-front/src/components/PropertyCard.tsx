@@ -1,4 +1,4 @@
-import type { Property } from '../types.d';
+import type { Property } from "../types.d";
 
 interface PropertyCardProps {
   property: Property;
@@ -9,16 +9,16 @@ interface PropertyCardProps {
 }
 
 function formatPrice(precio: number, moneda: string, tipo: string): string {
-  const simbolo = moneda === 'USD' ? '$' : moneda === 'EUR' ? '€' : '$';
-  const formatted = new Intl.NumberFormat('es-ES').format(precio);
-  const suffix = tipo === 'alquiler' ? '/mes' : '';
+  const simbolo = moneda === "USD" ? "$" : moneda === "EUR" ? "€" : "$";
+  const formatted = new Intl.NumberFormat("es-ES").format(precio);
+  const suffix = tipo === "alquiler" ? "/mes" : "";
   return `${simbolo}${formatted}${suffix}`;
 }
 
 export function PropertyCard({ property, onClick, isAdmin, onEdit, onDelete }: PropertyCardProps) {
   const fotoPrincipal = property.fotos && property.fotos.length > 0
     ? property.fotos[0]
-    : 'https://via.placeholder.com/400x300?text=Sin+foto';
+    : "https://via.placeholder.com/400x300?text=Sin+foto";
 
   return (
     <div
@@ -28,8 +28,8 @@ export function PropertyCard({ property, onClick, isAdmin, onEdit, onDelete }: P
       <div className="relative">
         <img src={fotoPrincipal} alt={property.titulo} className="w-full h-48 object-cover" />
         <div className="absolute top-4 left-4">
-          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${property.tipo === 'venta' ? 'bg-primary text-white' : 'bg-secondary text-white'}`}>
-            {property.tipo === 'venta' ? 'Venta' : 'Alquiler'}
+          <span className={`px-3 py-1 rounded-full text-sm font-semibold ${property.tipo === "venta" ? "bg-primary text-white" : "bg-secondary text-white"}`}>
+            {property.tipo === "venta" ? "Venta" : "Alquiler"}
           </span>
         </div>
         {isAdmin && (

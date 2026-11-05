@@ -1,6 +1,6 @@
 # Formulario para agregar / actualizar propiedades
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: FEATURE
 

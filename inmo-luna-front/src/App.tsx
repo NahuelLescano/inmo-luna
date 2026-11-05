@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { Header } from './components/Header';
-import { Hero } from './components/Hero';
-import { PropertyCard } from './components/PropertyCard';
-import { PropertyModal } from './components/PropertyModal';
-import { PropertyForm } from './components/PropertyForm';
-import { AdminLogin } from './components/AdminLogin';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
-import type { Property } from './types.d';
+import { useState, useEffect } from "react";
+import { Header } from "./components/Header";
+import { Hero } from "./components/Hero";
+import { PropertyCard } from "./components/PropertyCard";
+import { PropertyModal } from "./components/PropertyModal";
+import { PropertyForm } from "./components/PropertyForm";
+import { AdminLogin } from "./components/AdminLogin";
+import { Contact } from "./components/Contact";
+import { Footer } from "./components/Footer";
+import type { Property } from "./types.d";
 
-const API_URL = 'http://localhost:3001/api';
-const TOKEN_KEY = 'luna_admin_token';
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
+const TOKEN_KEY = "luna_admin_token";
 
 export function App() {
   const [propiedades, setPropiedades] = useState<Property[]>([]);
@@ -22,9 +22,9 @@ export function App() {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem(TOKEN_KEY));
   const [ubicaciones, setUbicaciones] = useState<string[]>([]);
   const [filtros, setFiltros] = useState({
-    tipo: '',
-    habitaciones: '',
-    ubicacion: ''
+    tipo: "",
+    habitaciones: "",
+    ubicacion: ""
   });
 
   const isAdmin = Boolean(token);
@@ -42,7 +42,7 @@ export function App() {
         setPropiedadesFiltradas(data);
         updateUbicaciones(data);
       })
-      .catch(err => console.error('Error cargando propiedades:', err));
+      .catch(err => console.error("Error cargando propiedades:", err));
   }, []);
 
   const handleLogin = (newToken: string) => {
@@ -61,7 +61,7 @@ export function App() {
   const handleAuthError = (res: Response): boolean => {
     if (res.status === 401 || res.status === 403) {
       handleLogout();
-      alert('Tu sesión expiró. Iniciá sesión de nuevo.');
+      alert("Tu sesión expiró. Iniciá sesión de nuevo.");
       setShowLogin(true);
       return true;
     }
@@ -78,7 +78,7 @@ export function App() {
       filtradas = filtradas.filter(p => p.habitaciones >= parseInt(habitaciones));
     }
     if (precio) {
-      const [min, max] = precio.split('-').map(Number);
+      const [min, max] = precio.split("-").map(Number);
       filtradas = filtradas.filter(p => p.precio >= min && p.precio <= max);
     }
 
@@ -101,7 +101,7 @@ export function App() {
     setPropiedadesFiltradas(filtradas);
   };
 
-  const handleSaveProperty = async (property: Omit<Property, 'id'>) => {
+  const handleSaveProperty = async (property: Omit<Property, "id">) => {
     if (!token) {
       setShowLogin(true);
       return;
@@ -114,9 +114,9 @@ export function App() {
 
     try {
       const res = await fetch(url, {
-        method: isEditing ? 'PUT' : 'POST',
+        method: isEditing ? "PUT" : "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(property)
@@ -125,7 +125,7 @@ export function App() {
       if (handleAuthError(res)) return;
 
       if (!res.ok) {
-        alert('No se pudo guardar la propiedad');
+        alert("No se pudo guardar la propiedad");
         return;
       }
 
@@ -147,10 +147,10 @@ export function App() {
 
       setShowForm(false);
       setEditingProperty(null);
-      alert(isEditing ? 'Propiedad actualizada exitosamente' : 'Propiedad creada exitosamente');
+      alert(isEditing ? "Propiedad actualizada exitosamente" : "Propiedad creada exitosamente");
     } catch (err) {
-      console.error('Error guardando propiedad:', err);
-      alert('Error al guardar la propiedad');
+      console.error("Error guardando propiedad:", err);
+      alert("Error al guardar la propiedad");
     }
   };
 
@@ -160,14 +160,14 @@ export function App() {
 
     try {
       const res = await fetch(`${API_URL}/properties/${property.id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
 
       if (handleAuthError(res)) return;
 
       if (!res.ok) {
-        alert('No se pudo eliminar la propiedad');
+        alert("No se pudo eliminar la propiedad");
         return;
       }
 
@@ -180,10 +180,10 @@ export function App() {
         setPropiedadSeleccionada(null);
       }
 
-      alert('Propiedad eliminada');
+      alert("Propiedad eliminada");
     } catch (err) {
-      console.error('Error eliminando propiedad:', err);
-      alert('Error al eliminar la propiedad');
+      console.error("Error eliminando propiedad:", err);
+      alert("Error al eliminar la propiedad");
     }
   };
 

@@ -1,24 +1,24 @@
-import { useState, useEffect, type SubmitEvent } from 'react';
-import type { Property } from '../types.d';
+import { useState, useEffect, type SubmitEvent } from "react";
+import type { Property } from "../types.d";
 
 interface PropertyFormProps {
   show: boolean;
   onClose: () => void;
-  onSave: (property: Omit<Property, 'id'>) => void;
+  onSave: (property: Omit<Property, "id">) => void;
   editingProperty?: Property | null;
 }
 
 const emptyForm = {
-  titulo: '',
-  tipo: 'venta' as 'venta' | 'alquiler',
-  precio: '',
-  moneda: 'USD',
-  habitaciones: '',
-  banos: '',
-  m2: '',
-  ubicacion: '',
-  descripcion: '',
-  fotos: ''
+  titulo: "",
+  tipo: "venta" as "venta" | "alquiler",
+  precio: "",
+  moneda: "USD",
+  habitaciones: "",
+  banos: "",
+  m2: "",
+  ubicacion: "",
+  descripcion: "",
+  fotos: ""
 };
 
 export function PropertyForm({ show, onClose, onSave, editingProperty }: PropertyFormProps) {
@@ -41,7 +41,7 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
         m2: String(editingProperty.m2),
         ubicacion: editingProperty.ubicacion,
         descripcion: editingProperty.descripcion,
-        fotos: editingProperty.fotos.join('\n')
+        fotos: editingProperty.fotos.join("\n")
       });
     } else {
       setFormData(emptyForm);
@@ -54,7 +54,7 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
     e.preventDefault();
     setSaving(true);
 
-    const property: Omit<Property, 'id'> = {
+    const property: Omit<Property, "id"> = {
       titulo: formData.titulo,
       tipo: formData.tipo,
       precio: Number(formData.precio),
@@ -64,7 +64,7 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
       m2: Number(formData.m2),
       ubicacion: formData.ubicacion,
       descripcion: formData.descripcion,
-      fotos: formData.fotos.split('\n').map(url => url.trim()).filter(url => url !== '')
+      fotos: formData.fotos.split("\n").map(url => url.trim()).filter(url => url !== "")
     };
 
     onSave(property);
@@ -79,7 +79,7 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
           <div className="bg-white">
             <div className="flex justify-between items-center p-4 border-b">
               <h3 className="font-serif text-2xl font-semibold text-primary">
-                {isEditing ? 'Editar Propiedad' : 'Agregar Propiedad'}
+                {isEditing ? "Editar Propiedad" : "Agregar Propiedad"}
               </h3>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
                   <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
                   <select
                     value={formData.tipo}
-                    onChange={(e) => setFormData({ ...formData, tipo: e.target.value as 'venta' | 'alquiler' })}
+                    onChange={(e) => setFormData({ ...formData, tipo: e.target.value as "venta" | "alquiler" })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary"
                   >
                     <option value="venta">Venta</option>
@@ -226,7 +226,7 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
                   disabled={saving}
                   className="flex-1 bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
                 >
-                  {saving ? 'Guardando...' : isEditing ? 'Guardar Cambios' : 'Guardar Propiedad'}
+                  {saving ? "Guardando..." : isEditing ? "Guardar Cambios" : "Guardar Propiedad"}
                 </button>
               </div>
             </form>

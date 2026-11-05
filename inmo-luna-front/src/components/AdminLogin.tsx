@@ -1,4 +1,4 @@
-import { useState, type SubmitEvent } from 'react';
+import { useState, type SubmitEvent } from "react";
 
 interface AdminLoginProps {
   show: boolean;
@@ -6,41 +6,41 @@ interface AdminLoginProps {
   onLogin: (token: string) => void;
 }
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001/api";
 
 export function AdminLogin({ show, onClose, onLogin }: AdminLoginProps) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   if (!show) return null;
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       const res = await fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
       });
 
       if (!res.ok) {
-        setError('Usuario o contraseña incorrectos');
+        setError("Usuario o contraseña incorrectos");
         return;
       }
 
       const data = await res.json();
       onLogin(data.token);
-      setUsername('');
-      setPassword('');
-      setError('');
+      setUsername("");
+      setPassword("");
+      setError("");
     } catch (err) {
-      console.error('Error de login:', err);
-      setError('No se pudo conectar con el servidor');
+      console.error("Error de login:", err);
+      setError("No se pudo conectar con el servidor");
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,7 @@ export function AdminLogin({ show, onClose, onLogin }: AdminLoginProps) {
               disabled={loading}
               className="w-full bg-secondary hover:bg-secondary/90 text-white font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
             >
-              {loading ? 'Ingresando...' : 'Ingresar'}
+              {loading ? "Ingresando..." : "Ingresar"}
             </button>
           </form>
         </div>

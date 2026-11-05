@@ -1,4 +1,4 @@
-type PropertyType = 'venta' | 'alquiler';
+type PropertyType = "venta" | "alquiler";
 
 export interface Property {
     id: number;

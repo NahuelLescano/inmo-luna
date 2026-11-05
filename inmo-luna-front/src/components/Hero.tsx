@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface HeroProps {
   onSearch: (filters: { tipo: string; habitaciones: string; precio: string }) => void;
 }
 
 export function Hero({ onSearch }: HeroProps) {
-  const [tipo, setTipo] = useState('');
-  const [habitaciones, setHabitaciones] = useState('');
-  const [precio, setPrecio] = useState('');
+  const [tipo, setTipo] = useState("");
+  const [habitaciones, setHabitaciones] = useState("");
+  const [precio, setPrecio] = useState("");
 
   const handleSearch = () => {
     onSearch({ tipo, habitaciones, precio });
-    document.getElementById('propiedades')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("propiedades")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (

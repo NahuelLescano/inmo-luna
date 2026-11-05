@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Builds
+dist/
+build/
+*.tsbuildinfo
+
+# Variables de entorno (credenciales)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Sistema
+.DS_Store
+.idea/
+.vscode/
+
+# Temporales
+tmp/

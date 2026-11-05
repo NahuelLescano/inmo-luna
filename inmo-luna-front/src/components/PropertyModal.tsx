@@ -1,4 +1,4 @@
-import type { Property } from '../types.d';
+import type { Property } from "../types.d";
 
 interface PropertyModalProps {
     property: Property | null;
@@ -6,9 +6,9 @@ interface PropertyModalProps {
 }
 
 function formatPrice(precio: number, moneda: string, tipo: string): string {
-    const simbolo = moneda === 'USD' ? '$' : moneda === 'EUR' ? '€' : '$';
-    const formatted = new Intl.NumberFormat('es-ES').format(precio);
-    const suffix = tipo === 'alquiler' ? '/mes' : '';
+    const simbolo = moneda === "USD" ? "$" : moneda === "EUR" ? "€" : "$";
+    const formatted = new Intl.NumberFormat("es-ES").format(precio);
+    const suffix = tipo === "alquiler" ? "/mes" : "";
     return `${simbolo}${formatted}${suffix}`;
 }
 
@@ -16,7 +16,7 @@ export function PropertyModal({ property, onClose }: PropertyModalProps) {
     if (!property) return null;
 
     const mensaje = `Hola, me interesa la propiedad "${property.titulo}" en ${property.ubicacion}. ¿Podrían darme más información?`;
-    const telefono = '1234567890';
+    const telefono = "1234567890";
 
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -41,7 +41,7 @@ export function PropertyModal({ property, onClose }: PropertyModalProps) {
                                             src={foto}
                                             alt={`${property.titulo} - Foto ${index + 1}`}
                                             className="w-full h-64 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                                            onClick={() => window.open(foto, '_blank')}
+                                            onClick={() => window.open(foto, "_blank")}
                                         />
                                     ))}
                                 </div>
