@@ -1,6 +1,6 @@
 # migrar a una base de datos
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: FEATURE
 

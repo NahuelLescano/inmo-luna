@@ -1,4 +1,5 @@
 import type { Property } from "../types.d";
+import { imageSrc } from "../config";
 
 interface PropertyCardProps {
   property: Property;
@@ -13,8 +14,8 @@ function formatPrice(precio: number, moneda: string, tipo: string): string {
 }
 
 export function PropertyCard({ property, onClick }: PropertyCardProps) {
-  const fotoPrincipal = property.fotos && property.fotos.length > 0
-    ? property.fotos[0]
+  const fotoPrincipal = property.imagenes?.[0]?.url
+    ? imageSrc(property.imagenes[0].url)
     : "https://via.placeholder.com/400x300?text=Sin+foto";
 
   return (

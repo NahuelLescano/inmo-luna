@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { AdminLogin } from "../components/AdminLogin";
 import { PropertyForm } from "../components/PropertyForm";
-import type { Property } from "../types.d";
-import { VITE_API_URL, VITE_TOKEN_KEY } from "../config";
+import type { Property, PropertyInput } from "../types.d";
+import { VITE_API_URL, VITE_TOKEN_KEY, imageSrc } from "../config";
 
 function formatPrice(precio: number, moneda: string, tipo: string): string {
   const simbolo = moneda === "USD" ? "$" : moneda === "EUR" ? "€" : "$";
@@ -47,20 +47,25 @@ export function Admin() {
     return false;
   };
 
-  const handleSaveProperty = async (property: Omit<Property, "id">) => {
+  const handleSaveProperty = async (
+    property: PropertyInput,
+    files: File[],
+    removedImageIds: number[],
+  ) => {
     if (!token) return;
 
     const isEditing = Boolean(editingProperty);
     const url = isEditing
-      ? `${API_URL}/properties/${editingProperty!.id}`
-      : `${API_URL}/properties`;
+      ? `${VITE_API_URL}/properties/${editingProperty!.id}`
+      : `${VITE_API_URL}/properties`;
+    const authHeaders = { Authorization: `Bearer ${token}` };
 
     try {
       const res = await fetch(url, {
         method: isEditing ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          ...authHeaders,
         },
         body: JSON.stringify(property),
       });
@@ -72,7 +77,46 @@ export function Admin() {
         return;
       }
 
-      const saved: Property = await res.json();
+      let saved: Property = await res.json();
+
+      for (const imageId of removedImageIds) {
+        const deleted = await fetch(
+          `${VITE_API_URL}/properties/${saved.id}/images/${imageId}`,
+          { method: "DELETE", headers: authHeaders },
+        );
+
+        if (handleAuthError(deleted)) return;
+
+        if (!deleted.ok) {
+          alert("No se pudo eliminar una de las imágenes");
+          return;
+        }
+      }
+
+      if (files.length > 0) {
+        const formData = new FormData();
+        files.forEach((file) => formData.append("imagenes", file));
+
+        const uploaded = await fetch(`${VITE_API_URL}/properties/${saved.id}/images`, {
+          method: "POST",
+          headers: authHeaders,
+          body: formData,
+        });
+
+        if (handleAuthError(uploaded)) return;
+
+        if (!uploaded.ok) {
+          alert("La propiedad se guardó, pero falló la subida de imágenes");
+          return;
+        }
+
+        saved = await uploaded.json();
+      } else if (removedImageIds.length > 0) {
+        const refreshed = await fetch(`${VITE_API_URL}/properties/${saved.id}`);
+        if (refreshed.ok) {
+          saved = await refreshed.json();
+        }
+      }
 
       setPropiedades((prev) =>
         isEditing ? prev.map((p) => (p.id === saved.id ? saved : p)) : [...prev, saved]
@@ -91,7 +135,7 @@ export function Admin() {
     if (!confirm(`¿Eliminar "${property.titulo}"? Esta acción no se puede deshacer.`)) return;
 
     try {
-      const res = await fetch(`${API_URL}/properties/${property.id}`, {
+      const res = await fetch(`${VITE_API_URL}/properties/${property.id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -209,7 +253,7 @@ export function Admin() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-4">
                           <img
-                            src={propiedad.fotos[0] ?? "https://via.placeholder.com/120x90?text=Sin+foto"}
+                            src={propiedad.imagenes?.[0]?.url ? imageSrc(propiedad.imagenes[0].url) : "https://via.placeholder.com/120x90?text=Sin+foto"}
                             alt={propiedad.titulo}
                             className="w-20 h-14 object-cover rounded"
                           />

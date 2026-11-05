@@ -1,4 +1,5 @@
 import type { Property } from "../types.d";
+import { imageSrc } from "../config";
 
 interface PropertyModalProps {
     property: Property | null;
@@ -33,15 +34,15 @@ export function PropertyModal({ property, onClose }: PropertyModalProps) {
                             </button>
                         </div>
                         <div className="p-6">
-                            {property.fotos && property.fotos.length > 0 ? (
+                            {property.imagenes && property.imagenes.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                    {property.fotos.map((foto, index) => (
+                                    {property.imagenes.map((imagen, index) => (
                                         <img
-                                            key={index}
-                                            src={foto}
+                                            key={imagen.id}
+                                            src={imageSrc(imagen.url)}
                                             alt={`${property.titulo} - Foto ${index + 1}`}
                                             className="w-full h-64 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                                            onClick={() => window.open(foto, "_blank")}
+                                            onClick={() => window.open(imageSrc(imagen.url), "_blank")}
                                         />
                                     ))}
                                 </div>
@@ -55,34 +56,27 @@ export function PropertyModal({ property, onClose }: PropertyModalProps) {
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-primary mb-2">Características</h4>
-                                    <ul className="space-y-2 text-gray-600">
-                                        <li className="flex items-center">
-                                            <span className="w-24 text-gray-500">Precio:</span>
-                                            <span className="font-semibold text-secondary">
-                                                {formatPrice(property.precio, property.moneda, property.tipo)}
-                                            </span>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <span className="w-24 text-gray-500">Habitaciones:</span>
-                                            <span>{property.habitaciones}</span>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <span className="w-24 text-gray-500">Baños:</span>
-                                            <span>{property.banos}</span>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <span className="w-24 text-gray-500">Superficie:</span>
-                                            <span>{property.m2} m²</span>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <span className="w-24 text-gray-500">Ubicación:</span>
-                                            <span>{property.ubicacion}</span>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <span className="w-24 text-gray-500">Tipo:</span>
-                                            <span className="capitalize">{property.tipo}</span>
-                                        </li>
-                                    </ul>
+                                    <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-gray-600">
+                                        <dt className="text-gray-500 whitespace-nowrap">Precio:</dt>
+                                        <dd className="font-semibold text-secondary">
+                                            {formatPrice(property.precio, property.moneda, property.tipo)}
+                                        </dd>
+
+                                        <dt className="text-gray-500 whitespace-nowrap">Habitaciones:</dt>
+                                        <dd>{property.habitaciones}</dd>
+
+                                        <dt className="text-gray-500 whitespace-nowrap">Baños:</dt>
+                                        <dd>{property.banos}</dd>
+
+                                        <dt className="text-gray-500 whitespace-nowrap">Superficie:</dt>
+                                        <dd>{property.m2} m²</dd>
+
+                                        <dt className="text-gray-500 whitespace-nowrap">Ubicación:</dt>
+                                        <dd>{property.ubicacion}</dd>
+
+                                        <dt className="text-gray-500 whitespace-nowrap">Tipo:</dt>
+                                        <dd className="capitalize">{property.tipo}</dd>
+                                    </dl>
                                 </div>
                             </div>
                             <div className="mt-6 flex flex-col sm:flex-row gap-4">

@@ -1,10 +1,18 @@
-import { useState, useEffect, type SubmitEvent } from "react";
-import type { Property } from "../types.d";
+import {
+  useState,
+  useEffect,
+  useRef,
+  type ChangeEvent,
+  type DragEvent,
+  type SubmitEvent,
+} from "react";
+import type { Property, PropertyImage, PropertyInput } from "../types.d";
+import { imageSrc } from "../config";
 
 interface PropertyFormProps {
   show: boolean;
   onClose: () => void;
-  onSave: (property: Omit<Property, "id">) => void;
+  onSave: (property: PropertyInput, files: File[], removedImageIds: number[]) => Promise<void>;
   editingProperty?: Property | null;
 }
 
@@ -18,12 +26,43 @@ const emptyForm = {
   m2: "",
   ubicacion: "",
   descripcion: "",
-  fotos: ""
 };
+
+const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+function NewImagePreview({ file, onRemove }: { file: File; onRemove: () => void }) {
+  const [url] = useState(() => URL.createObjectURL(file));
+
+  useEffect(() => {
+    return () => URL.revokeObjectURL(url);
+  }, [url]);
+
+  return (
+    <div className="relative group">
+      <img src={url} alt={file.name} className="w-full h-24 object-cover rounded-lg" />
+      <button
+        type="button"
+        onClick={onRemove}
+        title="Quitar imagen"
+        className="absolute top-1 right-1 w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center opacity-90 hover:opacity-100"
+      >
+        ×
+      </button>
+      <span className="absolute bottom-1 left-1 bg-secondary text-white text-[10px] font-semibold px-2 py-0.5 rounded">
+        Nueva
+      </span>
+    </div>
+  );
+}
 
 export function PropertyForm({ show, onClose, onSave, editingProperty }: PropertyFormProps) {
   const [formData, setFormData] = useState(emptyForm);
+  const [existingImages, setExistingImages] = useState<PropertyImage[]>([]);
+  const [removedImageIds, setRemovedImageIds] = useState<number[]>([]);
+  const [newFiles, setNewFiles] = useState<File[]>([]);
   const [saving, setSaving] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isEditing = Boolean(editingProperty);
 
@@ -41,20 +80,55 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
         m2: String(editingProperty.m2),
         ubicacion: editingProperty.ubicacion,
         descripcion: editingProperty.descripcion,
-        fotos: editingProperty.fotos.join("\n")
       });
+      setExistingImages(editingProperty.imagenes ?? []);
     } else {
       setFormData(emptyForm);
+      setExistingImages([]);
     }
+
+    setRemovedImageIds([]);
+    setNewFiles([]);
   }, [show, editingProperty]);
 
   if (!show) return null;
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const addFiles = (files: FileList | File[]) => {
+    const valid = Array.from(files).filter((file) => ACCEPTED_TYPES.includes(file.type));
+    setNewFiles((prev) => [...prev, ...valid]);
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      addFiles(event.target.files);
+    }
+    event.target.value = "";
+  };
+
+  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setDragging(false);
+    if (event.dataTransfer.files.length > 0) {
+      addFiles(event.dataTransfer.files);
+    }
+  };
+
+  const removeExistingImage = (id: number) => {
+    setExistingImages((prev) => prev.filter((image) => image.id !== id));
+    setRemovedImageIds((prev) => [...prev, id]);
+  };
+
+  const removeNewFile = (index: number) => {
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (saving) return;
     setSaving(true);
 
-    const property: Omit<Property, "id"> = {
+    const property: PropertyInput = {
       titulo: formData.titulo,
       tipo: formData.tipo,
       precio: Number(formData.precio),
@@ -64,11 +138,13 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
       m2: Number(formData.m2),
       ubicacion: formData.ubicacion,
       descripcion: formData.descripcion,
-      fotos: formData.fotos.split("\n").map(url => url.trim()).filter(url => url !== "")
     };
 
-    onSave(property);
-    setSaving(false);
+    try {
+      await onSave(property, newFiles, removedImageIds);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -202,14 +278,67 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">URLs de Fotos (una por línea)</label>
-                  <textarea
-                    rows={3}
-                    value={formData.fotos}
-                    onChange={(e) => setFormData({ ...formData, fotos: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary"
-                    placeholder="https://ejemplo.com/foto1.jpg&#10;https://ejemplo.com/foto2.jpg"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Imágenes</label>
+
+                  {(existingImages.length > 0 || newFiles.length > 0) && (
+                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-3">
+                      {existingImages.map((imagen) => (
+                        <div key={imagen.id} className="relative group">
+                          <img src={imageSrc(imagen.url)} alt="Imagen de la propiedad" className="w-full h-24 object-cover rounded-lg" />
+                          <button
+                            type="button"
+                            onClick={() => removeExistingImage(imagen.id)}
+                            title="Quitar imagen"
+                            className="absolute top-1 right-1 w-7 h-7 rounded-full bg-red-600 text-white flex items-center justify-center opacity-90 hover:opacity-100"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                      {newFiles.map((file, index) => (
+                        <NewImagePreview
+                          key={`${file.name}-${file.lastModified}-${index}`}
+                          file={file}
+                          onRemove={() => removeNewFile(index)}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  <div
+                    onDragOver={(event) => {
+                      event.preventDefault();
+                      setDragging(true);
+                    }}
+                    onDragLeave={() => setDragging(false)}
+                    onDrop={handleDrop}
+                    className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                      dragging ? "border-secondary bg-secondary/5" : "border-gray-300 bg-gray-50"
+                    }`}
+                  >
+                    <svg className="w-10 h-10 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Arrastrá imágenes acá o
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="text-secondary font-semibold hover:underline"
+                    >
+                      seleccioná archivos
+                    </button>
+                    <p className="text-xs text-gray-400 mt-2">JPG, PNG o WEBP · hasta 5 MB cada una</p>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -217,7 +346,8 @@ export function PropertyForm({ show, onClose, onSave, editingProperty }: Propert
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors"
+                  disabled={saving}
+                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
                 >
                   Cancelar
                 </button>

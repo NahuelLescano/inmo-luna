@@ -1,6 +1,6 @@
 # Subir imagen desde el dispositivo
 
-- STATUS: OPEN
+- STATUS: CLOSED
 - PRIORITY: 100
 - TAGS: FEATURE
 

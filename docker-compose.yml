@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: luna
+      POSTGRES_PASSWORD: luna
+      POSTGRES_DB: inmo_luna
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U luna -d inmo_luna"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  back:
+    build: ./inmo-luna-back
+    restart: unless-stopped
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgres://luna:luna@db:5432/inmo_luna
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASS: ${ADMIN_PASS:-luna2026}
+      JWT_SECRET: ${JWT_SECRET:-secret_key}
+      UPLOAD_DIR: /app/uploads
+      MAX_FILE_SIZE: 5242880
+    ports:
+      - "3001:3001"
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  front:
+    build:
+      context: ./inmo-luna-front
+      args:
+        VITE_API_URL: /api
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - back
+
+volumes:
+  postgres_data:
+  uploads_data:

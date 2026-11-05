@@ -22,5 +22,9 @@ pnpm-debug.log*
 .idea/
 .vscode/
 
+# Imágenes subidas
+inmo-luna-back/uploads/
+uploads/
+
 # Temporales
 tmp/
