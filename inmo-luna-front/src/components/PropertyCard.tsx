@@ -3,9 +3,6 @@ import type { Property } from "../types.d";
 interface PropertyCardProps {
   property: Property;
   onClick: () => void;
-  isAdmin?: boolean;
-  onEdit?: () => void;
-  onDelete?: () => void;
 }
 
 function formatPrice(precio: number, moneda: string, tipo: string): string {
@@ -15,7 +12,7 @@ function formatPrice(precio: number, moneda: string, tipo: string): string {
   return `${simbolo}${formatted}${suffix}`;
 }
 
-export function PropertyCard({ property, onClick, isAdmin, onEdit, onDelete }: PropertyCardProps) {
+export function PropertyCard({ property, onClick }: PropertyCardProps) {
   const fotoPrincipal = property.fotos && property.fotos.length > 0
     ? property.fotos[0]
     : "https://via.placeholder.com/400x300?text=Sin+foto";
@@ -32,34 +29,6 @@ export function PropertyCard({ property, onClick, isAdmin, onEdit, onDelete }: P
             {property.tipo === "venta" ? "Venta" : "Alquiler"}
           </span>
         </div>
-        {isAdmin && (
-          <div className="absolute top-4 right-4 flex gap-2">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit?.();
-              }}
-              title="Editar"
-              className="bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete?.();
-              }}
-              title="Eliminar"
-              className="bg-white/90 hover:bg-white text-red-600 p-2 rounded-full shadow transition-colors"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-            </button>
-          </div>
-        )}
       </div>
       <div className="p-6">
         <h3 className="font-serif text-xl font-semibold text-primary mb-2">{property.titulo}</h3>
