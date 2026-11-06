@@ -25,4 +25,10 @@ export const config = {
   uploadDir: process.env.UPLOAD_DIR ?? join(__dirname, "../uploads"),
   maxFileSize: Number(process.env.MAX_FILE_SIZE ?? 5 * 1024 * 1024),
   maxImagesPerRequest: Number(process.env.MAX_IMAGES_PER_REQUEST ?? 10),
+  // Orígenes permitidos para el frontend (separados por coma).
+  // Si está vacío, se permite cualquier origen (útil en desarrollo).
+  frontendUrls: (process.env.FRONTEND_URL ?? "")
+    .split(",")
+    .map((url) => url.trim().replace(/\/$/, ""))
+    .filter(Boolean),
 };

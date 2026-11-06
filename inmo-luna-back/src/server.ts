@@ -10,7 +10,26 @@ ensureUploadDir();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Sin Origin (curl, imágenes, mismo origen) siempre se permite.
+      if (!origin || config.frontendUrls.length === 0) {
+        callback(null, true);
+        return;
+      }
+
+      const normalized = origin.replace(/\/$/, "");
+
+      if (config.frontendUrls.includes(normalized)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origen no permitido por CORS: ${origin}`));
+    },
+  }),
+);
 app.use(express.json());
 
 // Archivos subidos

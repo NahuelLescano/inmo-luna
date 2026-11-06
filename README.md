@@ -107,6 +107,10 @@ Formatos de imagen aceptados: JPG, PNG y WEBP (máximo 5 MB cada una).
 - Las imágenes viven en el volumen `uploads_data`.
 - Para respaldar: `docker compose exec db pg_dump -U luna inmo_luna > backup.sql`.
 
+## Deploy
+
+La guía para publicar la demo con **Vercel + Railway** está en [`DEPLOY.md`](./DEPLOY.md).
+
 ## Notas
 
 - El antiguo archivo `inmo-luna-back/data/properties.json` se usa solo como fuente del seed inicial.
